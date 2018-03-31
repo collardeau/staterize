@@ -1,10 +1,10 @@
 {
   "name": "staterize",
   "version": "0.1.0",
-  "description": "create state machine",
+  "description": "easy state machine",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/collardeau/staterize"
   },
   "main": "lib/index.js",
   "scripts": {
