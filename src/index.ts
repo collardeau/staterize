@@ -2,17 +2,28 @@ interface Obj {
   [name: string]: any;
 }
 
+interface Funcs {
+  [name: string]: Function;
+}
+
 interface StateDef {
   name: string;
   val: any;
 }
 
+interface DeriveStateDef {
+  derive: Function;
+}
+
 interface Params {
   withState: StateDef[];
+  deriveState?: DeriveStateDef[];
+  withActions?: Funcs[];
+  comp: React.Component;
   onChange: () => Obj;
 }
 
-function reduceState(StateDefs: StateDef[], cb: Function) {
+function reduceState(StateDefs: StateDef[], comp) {
   return StateDefs.reduce(
     (acc, next) => {
       const { name, val } = next;
@@ -23,7 +34,7 @@ function reduceState(StateDefs: StateDef[], cb: Function) {
         actions: {
           ...acc.actions,
           [setterName]: (newState: Obj) => {
-            cb({
+            comp.setState({
               [name]: newState
             });
           }
@@ -34,9 +45,16 @@ function reduceState(StateDefs: StateDef[], cb: Function) {
   );
 }
 
-function main({ withState: stateDefs, onChange: cb }: Params) {
-  const state = reduceState(stateDefs, cb);
-  return state as Obj;
+// function deriveState(state: Obj) {
+//   return {
+//     ...state,
+//     started: false
+//   };
+// }
+
+function main({ withState: stateDefs, comp }: Params) {
+  const state = reduceState(stateDefs, comp);
+  return state;
 }
 
 const cap = (string: string) =>
