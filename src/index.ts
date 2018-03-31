@@ -23,7 +23,7 @@ interface Params {
   onChange: () => Obj;
 }
 
-function reduceState(StateDefs: StateDef[], comp) {
+function reduceState(StateDefs: StateDef[], comp: React.Component) {
   return StateDefs.reduce(
     (acc, next) => {
       const { name, val } = next;
