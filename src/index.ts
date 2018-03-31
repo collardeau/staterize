@@ -13,19 +13,25 @@ interface Params {
 }
 
 function reduceState(StateDefs: StateDef[], cb: Function) {
-  return StateDefs.reduce((acc, next) => {
-    const { name, val } = next;
-    const setterName = `set${cap(name)}`;
-    return {
-      ...acc,
-      [name]: val,
-      [setterName]: (newState: Obj) => {
-        cb({
-          [name]: newState
-        });
-      }
-    };
-  }, {});
+  return StateDefs.reduce(
+    (acc, next) => {
+      const { name, val } = next;
+      const setterName = `set${cap(name)}`;
+      return {
+        ...acc,
+        [name]: val,
+        actions: {
+          ...acc.actions,
+          [setterName]: (newState: Obj) => {
+            cb({
+              [name]: newState
+            });
+          }
+        }
+      };
+    },
+    { actions: {} }
+  );
 }
 
 function main({ withState: stateDefs, onChange: cb }: Params) {

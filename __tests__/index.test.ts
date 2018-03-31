@@ -17,11 +17,11 @@ test('creates state', () => {
   });
   expect(r.count).toBe(0);
   expect(r.loaded).toBe(false);
-  r.setCount(1);
+  r.actions.setCount(1);
   expect(spy).toHaveBeenCalledWith({
     count: 1
   });
-  r.setLoaded(true);
+  r.actions.setLoaded(true);
   expect(spy).toHaveBeenCalledWith({
     loaded: true
   });
