@@ -74,3 +74,12 @@ test('multiple derives', () => {
   expect(t.count).toBe(2);
   expect(t.withBonus).toBe(12);
 });
+
+test('actions', () => {
+  const defs = [];
+  const d = s(defs);
+  let t = d({ loaded: false });
+  expect(t.toggleLoaded).toBeDefined();
+  t.toggleLoaded();
+  // console.log(t);
+});

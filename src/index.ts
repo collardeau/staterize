@@ -18,13 +18,28 @@ function derive(defs: Obj[], changes: Obj, prevState: Obj) {
   }, changes);
 }
 
+function createActions(changes: Obj) {
+  let acts: Obj = {};
+  map(x => {
+    if (typeof x == typeof true) {
+      acts[`toggleLoaded`] = () => {};
+    }
+    return {};
+  }, changes);
+  return acts;
+}
+
 function main(defs: Obj[]) {
   let state = {};
   return function(changes: Obj) {
+    const actions = createActions(changes);
     state = { ...state, ...changes };
     const newState = derive(defs, changes, state);
     state = { ...state, ...newState };
-    return newState;
+    return {
+      ...newState,
+      ...actions
+    };
   };
 }
 
