@@ -2,6 +2,14 @@ import * as React from 'react';
 import * as renderer from 'react-test-renderer';
 import s from '../src/index';
 
+test('returns state changes', () => {
+  const derive = s([]);
+  let t = derive({
+    a: 'a'
+  });
+  expect(t.a).toBe('a');
+});
+
 test('derives state', () => {
   const defs = [
     {
@@ -11,10 +19,6 @@ test('derives state', () => {
   ];
   const derive = s(defs);
   let t = derive({
-    a: 'a'
-  });
-  expect(t.a).toBe('a');
-  t = derive({
     count: 0
   });
   expect(t.count).toBe(0);
@@ -22,7 +26,25 @@ test('derives state', () => {
   expect(t.isOne).toBe(false);
 });
 
-test('', () => {
+test('derive derived state', () => {
+  const defs = [
+    {
+      isZero: st => st.count === 0
+    },
+    {
+      isNotZero: st => !st.isZero
+    }
+  ];
+  const derive = s(defs);
+  let t = derive({
+    count: 0
+  });
+  expect(t.count).toBe(0);
+  expect(t.isZero).toBe(true);
+  expect(t.isNotZero).toBe(false);
+});
+
+test('users previous state', () => {
   const defs = [
     {
       withBonus: st => st.bonus + st.count

@@ -8,6 +8,7 @@ function derive(defs: Obj[], changes: Obj, prevState: Obj) {
   return defs.reduce((acc: any, next: any) => {
     const state = {
       ...prevState,
+      ...acc,
       ...changes
     };
     const dState = map((x: any) => x(state), next);
