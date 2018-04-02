@@ -4,42 +4,47 @@ interface Obj {
   [name: string]: any;
 }
 
-function derive(defs: Obj[], changes: Obj, prevState: Obj) {
-  return defs.reduce((acc: any, next: any) => {
-    const midState = {
-      ...prevState,
-      ...acc
-    };
-    const dState = map((x: any) => x(midState), next);
-    return {
-      ...acc,
-      ...dState
-    };
-  }, changes);
+function deriveFactory(defs: Obj[]) {
+  return function derive(changes: Obj, prevState: Obj = {}) {
+    return defs.reduce((acc: any, next: any) => {
+      const midState = {
+        ...prevState,
+        ...acc
+      };
+      const dState = map((x: any) => x(midState), next);
+      return {
+        ...acc,
+        ...dState
+      };
+    }, changes);
+  };
 }
 
-function createActions(changes: Obj) {
-  let acts: Obj = {};
-  map(x => {
-    if (typeof x == typeof true) {
-      acts[`toggleLoaded`] = () => {};
-    }
-    return {};
-  }, changes);
-  return acts;
-}
+// function createActions(onChange: Function, changes: Obj) {
+//   let acts: Obj = {};
+//   map(x => {
+//     if (typeof x == typeof true) {
+//       acts[`toggleLoaded`] = () => {
+//         onChange({
+//           loaded: true
+//         });
+//       };
+//     }
+//     return {};
+//   }, changes);
+//   return acts;
+// }
 
-function main(defs: Obj[]) {
-  let state = {};
-  return function(changes: Obj) {
-    const actions = createActions(changes);
-    state = { ...state, ...changes };
-    const newState = derive(defs, changes, state);
-    state = { ...state, ...newState };
-    return {
-      ...newState,
-      ...actions
-    };
+function main(inState: Obj = {}, defs: Obj[], cb: Function = () => {}) {
+  const derive = deriveFactory(defs);
+  let cache = { ...inState, ...derive(inState) };
+  // const actions = createActions(onChange, changes);
+  return function store(changes: Obj = {}) {
+    if (!Object.keys(changes).length) return cache;
+    const newState = derive(changes, cache);
+    cache = { ...cache, ...newState };
+    cb(newState);
+    return newState;
   };
 }
 
