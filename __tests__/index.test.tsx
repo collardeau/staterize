@@ -32,6 +32,19 @@ test('init store', () => {
   expect(calls[1][0].isBinary).toBe(false);
 });
 
+test('creates loaded state', () => {
+  const spy = jest.fn();
+  const { calls } = spy.mock;
+  const state = { posts: {} };
+  let store = staterize(state, [], spy);
+  let t = store();
+  expect(t.postsLoaded).toBe(0);
+  t.actions.setPosts({ a: 'a' });
+  expect(calls[0][0].postsLoaded).toBeGreaterThan(0);
+  t.actions.resetPosts({ a: 'a' });
+  expect(calls[1][0].postsLoaded).toBe(0);
+});
+
 test('calls user callback with new state', () => {
   const spy = jest.fn();
   const { calls } = spy.mock;
@@ -58,7 +71,7 @@ test('calls user callback with new state', () => {
   expect(calls[1][0].points).toBeUndefined();
 });
 
-test('creates actions', () => {
+test('creates toggle actions on bool states', () => {
   const spy = jest.fn();
   const { calls } = spy.mock;
   const state = { loaded: false, hot: true };
@@ -71,10 +84,22 @@ test('creates actions', () => {
   let t = store();
   expect(t.loaded).toBe(false);
   expect(t.loading).toBe(true);
-  expect(t.actions.toggleHot).toBeDefined();
+  expect(t.loading).toBe(true);
   t.actions.toggleLoaded();
+  expect(calls[0][0].loaded).toBe(true);
   expect(calls[0][0].loaded).toBe(true);
   t.actions.toggleLoaded();
   expect(calls[1][0].loaded).toBe(false);
   expect(t.loading).toBe(true);
+});
+
+test('creates set and reset actions', () => {
+  const spy = jest.fn();
+  const state = { posts: {} };
+  let store = staterize(state, [], spy);
+  let t = store();
+  t.actions.setPosts({ a: 'post' });
+  expect(spy.mock.calls[0][0].posts.a).toBe('post');
+  t.actions.resetPosts();
+  expect(spy.mock.calls[1][0].posts.a).toBeUndefined();
 });

@@ -6,7 +6,7 @@ interface Obj {
 
 // --------------
 
-function deriveFactory(defs: Obj[]) {
+function deriveMkr(defs: Obj[]) {
   return function derive(changes: Obj, prevState: Obj = {}) {
     return defs.reduce((acc: any, next: any) => {
       const midState = { ...prevState, ...acc };
@@ -16,20 +16,48 @@ function deriveFactory(defs: Obj[]) {
   };
 }
 
-function createActions(getState: Function, update: Function, inState: Obj) {
+function createActions(inState: Obj, getState: Function, cb: Function) {
   let actions: Obj = {};
   Object.keys(inState).forEach(name => {
-    const s = inState[name];
-    if (typeof s === typeof true) {
-      const capName = cap(name);
+    const next = inState[name];
+    const capName = cap(name);
+    const resetName = `reset${capName}`;
+    const loadedName = `${name}Loaded`;
+    // set
+    const setName = `set${capName}`;
+    actions[setName] = (newState: any) => {
+      cb({
+        [name]: newState,
+        [loadedName]: Date.now()
+      });
+    };
+    // reset
+    actions[resetName] = () => {
+      cb({
+        [name]: next,
+        [loadedName]: 0
+      });
+    };
+    // toggle
+    if (typeof next === typeof true) {
       const toggleName = `toggle${capName}`;
       actions[toggleName] = () => {
-        const { loaded } = getState();
-        update({ loaded: !loaded });
+        const st = getState()[name];
+        cb({ [name]: !st });
       };
     }
   });
-  return actions;
+  return { actions };
+}
+
+function store() {
+  let state = {};
+  return {
+    getState: () => state,
+    setState: (changes: any) => {
+      state = { ...state, ...changes };
+    }
+  };
 }
 
 // HELPERS
@@ -39,19 +67,30 @@ const cap = (string: string) =>
 
 // MAIN
 
+function createStates(inState: Obj) {
+  let state: Obj = {};
+  Object.keys(inState).forEach(key => {
+    state[`${key}Loaded`] = 0;
+  });
+  return state;
+}
+
 function main(inState: Obj = {}, defs: Obj[], cb: Function = () => {}) {
-  let state = {};
-  const getState = () => state;
+  const { getState, setState } = store();
   const update = (changes: Obj) => {
-    state = { ...state, ...changes };
+    setState(changes);
     cb(changes);
     return changes;
   };
-  const derive = deriveFactory(defs);
-  const deriveAndUpdate = (changes: Obj) => update(derive(changes));
-  const actions = createActions(getState, deriveAndUpdate, inState);
-  state = { ...derive(inState), actions };
-  return function store(changes: Obj = {}) {
+  const derive = deriveMkr(defs);
+  const deriveUpdate = (changes: Obj) => update(derive(changes));
+  setState({
+    ...createStates(inState),
+    ...derive(inState),
+    ...createActions(inState, getState, deriveUpdate)
+  });
+  return function(changes: Obj = {}) {
+    const state = getState();
     if (!Object.keys(changes).length) return state;
     const newState = derive(changes, state);
     return update(newState);
