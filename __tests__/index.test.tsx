@@ -44,20 +44,33 @@ test('derive derived state', () => {
   expect(t.isNotZero).toBe(false);
 });
 
-test('users previous state', () => {
+test('multiple derives', () => {
   const defs = [
     {
       withBonus: st => st.bonus + st.count
     }
   ];
   const derive = s(defs);
-  let t = derive(
-    {
-      count: 1
-    },
-    { bonus: 5 }
-  );
+  let t = derive({
+    bonus: 5
+  });
+  expect(t.bonus).toBe(5);
+  t = derive({
+    count: 1
+  });
   expect(t.count).toBe(1);
   expect(t.withBonus).toBe(6);
+  // dont return unchanged keys:
   expect(t.bonus).toBeUndefined();
+  t = derive({
+    bonus: 10
+  });
+  expect(t.bonus).toBe(10);
+  expect(t.withBonus).toBe(11);
+  expect(t.count).toBeUndefined();
+  t = derive({
+    count: 2
+  });
+  expect(t.count).toBe(2);
+  expect(t.withBonus).toBe(12);
 });

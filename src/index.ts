@@ -6,12 +6,11 @@ interface Obj {
 
 function derive(defs: Obj[], changes: Obj, prevState: Obj) {
   return defs.reduce((acc: any, next: any) => {
-    const state = {
+    const midState = {
       ...prevState,
-      ...acc,
-      ...changes
+      ...acc
     };
-    const dState = map((x: any) => x(state), next);
+    const dState = map((x: any) => x(midState), next);
     return {
       ...acc,
       ...dState
@@ -20,8 +19,12 @@ function derive(defs: Obj[], changes: Obj, prevState: Obj) {
 }
 
 function main(defs: Obj[]) {
-  return function(changes: Obj, prevState: Obj = {}) {
-    return derive(defs, changes, prevState);
+  let state = {};
+  return function(changes: Obj) {
+    state = { ...state, ...changes };
+    const newState = derive(defs, changes, state);
+    state = { ...state, ...newState };
+    return newState;
   };
 }
 
