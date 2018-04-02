@@ -34,6 +34,7 @@ test('init store', () => {
 
 test('calls user callback with new state', () => {
   const spy = jest.fn();
+  const { calls } = spy.mock;
   const state = { points: 0, bonus: 5 };
   const derivs = [
     {
@@ -44,7 +45,6 @@ test('calls user callback with new state', () => {
   store({
     points: 10
   });
-  const { calls } = spy.mock;
   expect(calls[0][0].points).toBe(10);
   expect(calls[0][0].score).toBe(15);
   // bonus is not changed:
@@ -56,4 +56,25 @@ test('calls user callback with new state', () => {
   expect(calls[1][0].score).toBe(20);
   // points is not changed:
   expect(calls[1][0].points).toBeUndefined();
+});
+
+test('creates actions', () => {
+  const spy = jest.fn();
+  const { calls } = spy.mock;
+  const state = { loaded: false, hot: true };
+  const derivs = [
+    {
+      loading: st => !st.loaded
+    }
+  ];
+  let store = staterize(state, derivs, spy);
+  let t = store();
+  expect(t.loaded).toBe(false);
+  expect(t.loading).toBe(true);
+  expect(t.actions.toggleHot).toBeDefined();
+  t.actions.toggleLoaded();
+  expect(calls[0][0].loaded).toBe(true);
+  t.actions.toggleLoaded();
+  expect(calls[1][0].loaded).toBe(false);
+  expect(t.loading).toBe(true);
 });
