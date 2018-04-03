@@ -22,19 +22,13 @@ function createActions(inState: Obj, getState: Function, cb: Function) {
     const next = inState[name];
     const capName = cap(name);
     const resetName = `reset${capName}`;
-    // set
-    const setName = `set${capName}`;
-    actions[setName] = (newState: any) => {
+    const isBool = isBoolean(next);
+    // reset
+    actions[resetName] = () => {
       cb({
-        [name]: newState
+        [name]: next
       });
     };
-      // reset
-      actions[resetName] = () => {
-        cb({
-          [name]: next
-        });
-      };
     // toggle
     if (isBool(next)) {
       const toggleName = `toggle${capName}`;

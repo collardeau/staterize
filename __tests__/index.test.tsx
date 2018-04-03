@@ -79,15 +79,13 @@ test('creates toggle actions on bool states', () => {
   expect(t.loading).toBe(true);
 });
 
-test('creates set and reset actions', () => {
+test('creates reset actions', () => {
   const spy = jest.fn();
   const state = { posts: {} };
   let store = staterize(state, [], spy);
   let t = store();
-  t.actions.setPosts({ a: 'post' });
-  expect(spy.mock.calls[0][0].posts.a).toBe('post');
   t.actions.resetPosts();
-  expect(spy.mock.calls[1][0].posts.a).toBeUndefined();
+  expect(spy.mock.calls[0][0].posts.a).toBeUndefined();
 });
 
 test('todo setup', () => {
@@ -126,7 +124,7 @@ test('todo setup', () => {
   //
   const store = staterize(state, derivs, spy);
   const initState = store();
-  store(initState.actions.setItems({ someId: { title: 'hi' } }));
+  store({ items: { someId: { title: 'hi' } } });
   expect(calls[0][0].items.someId.title).toBe('hi');
   expect(calls[0][0].itemList[0].title).toBe('hi');
   expect(calls[0][0].formIsValid).toBeDefined();
