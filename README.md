@@ -27,13 +27,15 @@ const deriveState = [
 ];
 
 class App extends React.Component<any, any> {
-  // init a store function
-  store = staterize(state, deriveState, st => {
-    // callback when state changes
-    this.setState(st);
-  });
 
-  state = this.store(); // no params gets current state from store 
+  constructor() {
+    // init a store
+    this.store = staterize(state, deriveState, st => {
+      // callback when store state changes
+      this.setState(st);
+    });
+    this.state = this.store(); // get current state
+  }
 
   incr() {
     // now use store to make state changes
@@ -49,7 +51,7 @@ class App extends React.Component<any, any> {
       <div>
         {count}
         isBinary: {isBinary ? 'yes' : 'no'}
-        <button onClick={this.incr} />
+        <button onClick={this.incr}>+1</button>
       </div>
     );
   }
