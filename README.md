@@ -6,14 +6,61 @@
 
 A tiny state machine designed for React
 
-# Example
+# Install
 
+`npm install staterize --save`
+
+# Usage
+
+Example with React:
+
+```javascript
+
+const state = {
+  count: 0
+};
+const deriveState = [
+  {
+    isBinary: st => st.count === 0 || st.count === 1
+  }
+];
+
+class App extends React.Component<any, any> {
+  // init a store
+  store = staterize(state, deriveState, st => {
+    // callback when state changes
+    this.setState(st);
+  });
+  state = this.store(); // no params gets current state from store 
+  incr() {
+    // use store to make state changes
+    this.store({
+      count: this.state.count + 1
+      // no need to update isBinary!
+    });
+  render() {
+    const { count, isBinary } = this.state;
+    return (
+      <div>
+        {count}
+        isBinary: {isBinary ? 'yes' : 'no'}
+        <button onClick={this.incr} />
+      </div>
+    );
+  }
+  }
+}
+
+```
+
+Stand-alone example:
 
 
 ```javascript
 import staterize from 'staterize';
 
   // prepare your state and its derivations:
+  
   const state = { 
     count: 0 
    };
@@ -25,6 +72,7 @@ import staterize from 'staterize';
   ];
  
   // what to do when the state is updated:
+  
   const onStateChange = st => {
     console.log(st)
   }
@@ -38,8 +86,8 @@ import staterize from 'staterize';
  
  // calling store with some state updates:
  store({ count: 10 })
- // triggers the onStateChange callback with:
+ // triggers the onStateChange callback with the derived state:
  { count: 10, is10: true)
 
 ```
-More examples coming soon...
+
