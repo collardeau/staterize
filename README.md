@@ -26,7 +26,7 @@ const deriveState = [
   }
 ];
 
-class App extends React.Component<any, any> {
+class App extends React.Component {
 
   constructor() {
     // init a store
