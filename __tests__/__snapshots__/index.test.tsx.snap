@@ -10,7 +10,7 @@ Object {
     "title": "",
   },
   "showDones": true,
-  "staterize": Object {
+  "staterizeActions": Object {
     "resetItems": [Function],
     "resetLoaded": [Function],
     "resetNewItem": [Function],

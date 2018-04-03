@@ -59,7 +59,12 @@ const isBoolean = (thing: any) => typeof thing === 'boolean';
 
 // MAIN
 
-function main(inState: Obj = {}, defs: Obj[], cb: Function = () => {}) {
+function main(
+  inState: Obj = {},
+  defs: Obj[],
+  cb: Function = () => {},
+  opts: Obj = { flatten: false }
+) {
   const { getState, setState } = store();
   const update = (changes: Obj) => {
     setState(changes);
@@ -68,9 +73,13 @@ function main(inState: Obj = {}, defs: Obj[], cb: Function = () => {}) {
   };
   const derive = deriveMkr(defs);
   const deriveUpdate = (changes: Obj) => update(derive(changes, getState()));
+  let actions = createActions(inState, getState, deriveUpdate);
+  if (!opts.flatten) {
+    actions = { staterizeActions: actions };
+  }
   setState({
     ...derive(inState),
-    staterize: createActions(inState, getState, deriveUpdate)
+    ...actions
   });
   return function(changes: Obj = {}) {
     const state = getState();

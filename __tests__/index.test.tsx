@@ -71,10 +71,10 @@ test('creates toggle actions on bool states', () => {
   expect(t.loaded).toBe(false);
   expect(t.loading).toBe(true);
   expect(t.loading).toBe(true);
-  t.staterize.toggleLoaded();
+  t.staterizeActions.toggleLoaded();
   expect(calls[0][0].loaded).toBe(true);
   expect(calls[0][0].loaded).toBe(true);
-  t.staterize.toggleLoaded();
+  t.staterizeActions.toggleLoaded();
   expect(calls[1][0].loaded).toBe(false);
   expect(t.loading).toBe(true);
 });
@@ -86,8 +86,16 @@ test('creates reset actions', () => {
   let t = store();
   store({ posts: { a: 'a' } });
   expect(spy.mock.calls[0][0].posts.a).toBe('a');
-  t.staterize.resetPosts();
+  t.staterizeActions.resetPosts();
   expect(spy.mock.calls[1][0].posts.a).toBeUndefined();
+});
+
+test('flatten generated actions', () => {
+  const state = { posts: {} };
+  let store = staterize(state, [], () => {}, { flatten: true });
+  let t = store();
+  expect(t.staterizeActions).toBeUndefined();
+  expect(t.resetPosts).toBeDefined();
 });
 
 test('todo snapshot', () => {
