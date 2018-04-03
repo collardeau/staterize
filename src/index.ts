@@ -22,7 +22,6 @@ function createActions(inState: Obj, getState: Function, cb: Function) {
     const next = inState[name];
     const capName = cap(name);
     const resetName = `reset${capName}`;
-    const isBool = isBoolean(next);
     // reset
     actions[resetName] = () => {
       cb({
@@ -30,7 +29,7 @@ function createActions(inState: Obj, getState: Function, cb: Function) {
       });
     };
     // toggle
-    if (isBool(next)) {
+    if (isBoolean(next)) {
       const toggleName = `toggle${capName}`;
       actions[toggleName] = () => {
         const st = getState()[name];
@@ -56,7 +55,7 @@ function store() {
 const cap = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
-const isBool = (thing: any) => typeof thing === 'boolean';
+const isBoolean = (thing: any) => typeof thing === 'boolean';
 
 // MAIN
 
