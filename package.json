@@ -1,6 +1,6 @@
 {
   "name": "staterize",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "easy state machine",
   "repository": {
     "type": "git",
@@ -36,11 +36,7 @@
     "webpack-cli": "^2.0.10"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
