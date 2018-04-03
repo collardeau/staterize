@@ -14,7 +14,6 @@ A tiny state machine designed for React
 import staterize from 'staterize';
 
   // prepare your state and its derivations:
- 
   const state = { 
     count: 0 
    };
