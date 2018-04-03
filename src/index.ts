@@ -39,7 +39,7 @@ function createActions(inState: Obj, getState: Function, cb: Function) {
       });
     };
     // toggle
-    if (typeof next === typeof true) {
+    if (isBool(next)) {
       const toggleName = `toggle${capName}`;
       actions[toggleName] = () => {
         const st = getState()[name];
@@ -65,11 +65,14 @@ function store() {
 const cap = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
+const isBool = (thing: any) => typeof thing === 'boolean';
+
 // MAIN
 
 function createStates(inState: Obj) {
   let state: Obj = {};
   Object.keys(inState).forEach(key => {
+    if (isBool(inState[key])) return 0;
     state[`${key}Loaded`] = 0;
   });
   return state;

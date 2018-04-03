@@ -35,9 +35,12 @@ test('init store', () => {
 test('creates loaded state', () => {
   const spy = jest.fn();
   const { calls } = spy.mock;
-  const state = { posts: {} };
+  const state = { posts: {}, happy: true };
   let store = staterize(state, [], spy);
   let t = store();
+  // bools don't create loaded state:
+  expect(t.happyLoaded).toBeUndefined();
+  // but objects do:
   expect(t.postsLoaded).toBe(0);
   t.actions.setPosts({ a: 'a' });
   expect(calls[0][0].postsLoaded).toBeGreaterThan(0);
