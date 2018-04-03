@@ -84,8 +84,10 @@ test('creates reset actions', () => {
   const state = { posts: {} };
   let store = staterize(state, [], spy);
   let t = store();
+  store({ posts: { a: 'a' } });
+  expect(spy.mock.calls[0][0].posts.a).toBe('a');
   t.staterize.resetPosts();
-  expect(spy.mock.calls[0][0].posts.a).toBeUndefined();
+  expect(spy.mock.calls[1][0].posts.a).toBeUndefined();
 });
 
 test('todo snapshot', () => {
