@@ -4,6 +4,43 @@
 
 # staterize
 
-A state initializer designed for React
+A tiny state machine designed for React
 
-Coming Soon...
+# Example
+
+
+
+```javascript
+import staterize from 'staterize';
+
+  // prepare your state and its derivations:
+ 
+  const state = { 
+    count: 0 
+   };
+ 
+  const deriveState = [
+    {
+      is10: st => st.count === 10
+    }
+  ];
+ 
+  // what to do when the state is updated:
+  const onStateChange = st => {
+    console.log(st)
+  }
+  
+ // initilize a store from staterize:
+ const store = staterize(state, deriveState, onStateChange);
+
+// calling store with no params returns the current state:
+ const state = store();
+ // { count: 0, is10: false)
+ 
+ // calling store with some state updates:
+ store({ count: 10 })
+ // triggers the onStateChange callback with:
+ { count: 10, is10: true)
+
+```
+More examples coming soon...
