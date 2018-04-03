@@ -37,7 +37,7 @@ function createActions(inState: Obj, getState: Function, cb: Function) {
       };
     }
   });
-  return { actions };
+  return actions;
 }
 
 function store() {
@@ -70,7 +70,7 @@ function main(inState: Obj = {}, defs: Obj[], cb: Function = () => {}) {
   const deriveUpdate = (changes: Obj) => update(derive(changes, getState()));
   setState({
     ...derive(inState),
-    ...createActions(inState, getState, deriveUpdate)
+    staterize: createActions(inState, getState, deriveUpdate)
   });
   return function(changes: Obj = {}) {
     const state = getState();

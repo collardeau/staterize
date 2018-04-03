@@ -71,10 +71,10 @@ test('creates toggle actions on bool states', () => {
   expect(t.loaded).toBe(false);
   expect(t.loading).toBe(true);
   expect(t.loading).toBe(true);
-  t.actions.toggleLoaded();
+  t.staterize.toggleLoaded();
   expect(calls[0][0].loaded).toBe(true);
   expect(calls[0][0].loaded).toBe(true);
-  t.actions.toggleLoaded();
+  t.staterize.toggleLoaded();
   expect(calls[1][0].loaded).toBe(false);
   expect(t.loading).toBe(true);
 });
@@ -84,7 +84,7 @@ test('creates reset actions', () => {
   const state = { posts: {} };
   let store = staterize(state, [], spy);
   let t = store();
-  t.actions.resetPosts();
+  t.staterize.resetPosts();
   expect(spy.mock.calls[0][0].posts.a).toBeUndefined();
 });
 

@@ -2,14 +2,6 @@
 
 exports[`todo snapshot 1`] = `
 Object {
-  "actions": Object {
-    "resetItems": [Function],
-    "resetLoaded": [Function],
-    "resetNewItem": [Function],
-    "resetShowDones": [Function],
-    "toggleLoaded": [Function],
-    "toggleShowDones": [Function],
-  },
   "formIsValid": false,
   "itemList": Array [],
   "items": Object {},
@@ -18,6 +10,14 @@ Object {
     "title": "",
   },
   "showDones": true,
+  "staterize": Object {
+    "resetItems": [Function],
+    "resetLoaded": [Function],
+    "resetNewItem": [Function],
+    "resetShowDones": [Function],
+    "toggleLoaded": [Function],
+    "toggleShowDones": [Function],
+  },
 }
 `;
 
