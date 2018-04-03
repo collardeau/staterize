@@ -4,7 +4,7 @@
 
 # staterize
 
-A tiny state machine designed for React.
+A tiny state machine to handle "derived state" in a set-and-forget fashion, designed for React.
 
 # Install
 
