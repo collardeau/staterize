@@ -4,7 +4,7 @@
 
 # staterize
 
-A tiny state machine designed for React
+A tiny state machine designed for React.
 
 # Install
 
@@ -19,6 +19,7 @@ Example with React:
 const state = {
   count: 0
 };
+
 const deriveState = [
   {
     isBinary: st => st.count === 0 || st.count === 1
@@ -26,18 +27,22 @@ const deriveState = [
 ];
 
 class App extends React.Component<any, any> {
-  // init a store
+  // init a store function
   store = staterize(state, deriveState, st => {
     // callback when state changes
     this.setState(st);
   });
+
   state = this.store(); // no params gets current state from store 
+
   incr() {
-    // use store to make state changes
+    // now use store to make state changes
     this.store({
       count: this.state.count + 1
       // no need to update isBinary!
     });
+   }
+ 
   render() {
     const { count, isBinary } = this.state;
     return (
