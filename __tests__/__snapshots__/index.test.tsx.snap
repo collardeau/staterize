@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`todo snapshot 1`] = `
+Object {
+  "actions": Object {
+    "resetItems": [Function],
+    "resetLoaded": [Function],
+    "resetNewItem": [Function],
+    "resetShowDones": [Function],
+    "toggleLoaded": [Function],
+    "toggleShowDones": [Function],
+  },
+  "formIsValid": false,
+  "itemList": Array [],
+  "items": Object {},
+  "loaded": false,
+  "newItem": Object {
+    "title": "",
+  },
+  "showDones": true,
+}
+`;
+
+exports[`todo snapshot 2`] = `
+Array [
+  Array [
+    Object {
+      "formIsValid": false,
+      "itemList": Array [
+        Object {
+          "id": "someId",
+          "title": "hi",
+        },
+      ],
+      "items": Object {
+        "someId": Object {
+          "title": "hi",
+        },
+      },
+    },
+  ],
+]
+`;
