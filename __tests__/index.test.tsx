@@ -32,22 +32,6 @@ test('init store', () => {
   expect(calls[1][0].isBinary).toBe(false);
 });
 
-test('creates loaded state', () => {
-  const spy = jest.fn();
-  const { calls } = spy.mock;
-  const state = { posts: {}, happy: true };
-  let store = staterize(state, [], spy);
-  let t = store();
-  // bools don't create loaded state:
-  expect(t.happyLoaded).toBeUndefined();
-  // but objects do:
-  expect(t.postsLoaded).toBe(0);
-  t.actions.setPosts({ a: 'a' });
-  expect(calls[0][0].postsLoaded).toBeGreaterThan(0);
-  t.actions.resetPosts({ a: 'a' });
-  expect(calls[1][0].postsLoaded).toBe(0);
-});
-
 test('calls user callback with new state', () => {
   const spy = jest.fn();
   const { calls } = spy.mock;
@@ -145,7 +129,6 @@ test('todo setup', () => {
   store(initState.actions.setItems({ someId: { title: 'hi' } }));
   expect(calls[0][0].items.someId.title).toBe('hi');
   expect(calls[0][0].itemList[0].title).toBe('hi');
-  expect(calls[0][0].itemsLoaded).toBeGreaterThan(0);
   expect(calls[0][0].formIsValid).toBeDefined();
   // formIsValid is derived unnessarily without _on key
 });

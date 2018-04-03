@@ -22,22 +22,19 @@ function createActions(inState: Obj, getState: Function, cb: Function) {
     const next = inState[name];
     const capName = cap(name);
     const resetName = `reset${capName}`;
-    const loadedName = `${name}Loaded`;
     // set
     const setName = `set${capName}`;
     actions[setName] = (newState: any) => {
       cb({
-        [name]: newState,
-        [loadedName]: Date.now()
+        [name]: newState
       });
     };
-    // reset
-    actions[resetName] = () => {
-      cb({
-        [name]: next,
-        [loadedName]: 0
-      });
-    };
+      // reset
+      actions[resetName] = () => {
+        cb({
+          [name]: next
+        });
+      };
     // toggle
     if (isBool(next)) {
       const toggleName = `toggle${capName}`;
@@ -69,15 +66,6 @@ const isBool = (thing: any) => typeof thing === 'boolean';
 
 // MAIN
 
-function createStates(inState: Obj) {
-  let state: Obj = {};
-  Object.keys(inState).forEach(key => {
-    if (isBool(inState[key])) return 0;
-    state[`${key}Loaded`] = 0;
-  });
-  return state;
-}
-
 function main(inState: Obj = {}, defs: Obj[], cb: Function = () => {}) {
   const { getState, setState } = store();
   const update = (changes: Obj) => {
@@ -88,7 +76,6 @@ function main(inState: Obj = {}, defs: Obj[], cb: Function = () => {}) {
   const derive = deriveMkr(defs);
   const deriveUpdate = (changes: Obj) => update(derive(changes, getState()));
   setState({
-    ...createStates(inState),
     ...derive(inState),
     ...createActions(inState, getState, deriveUpdate)
   });
