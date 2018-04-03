@@ -83,7 +83,7 @@ function main(inState: Obj = {}, defs: Obj[], cb: Function = () => {}) {
     return changes;
   };
   const derive = deriveMkr(defs);
-  const deriveUpdate = (changes: Obj) => update(derive(changes));
+  const deriveUpdate = (changes: Obj) => update(derive(changes, getState()));
   setState({
     ...createStates(inState),
     ...derive(inState),
